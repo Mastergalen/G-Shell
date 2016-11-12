@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+#include "profileParser.h"
+
 #define LINE_BUFFER_SIZE 1024
 
 #define ARG_BUFFER_SIZE 64
@@ -37,7 +39,7 @@ char *read_line() {
         //If input exceeds buffer size, we need to expand the buffer size
         if(pos > bufferSize) {
             bufferSize += LINE_BUFFER_SIZE;
-            buffer = realloc(buffer, bufferSize);
+            buffer = realloc(buffer, bufferSize * sizeof(char));
 
             if(!buffer) {
                 perror("Error reallocating line buffer");
@@ -143,13 +145,10 @@ void print_welcome() {
     printf("Welcome: %s!\n", p->pw_name);
 }
 
-void load_profile() {
-    //TODO Throw error if there is no profile file
-}
-
 int main(int argc, char **argv) {
     print_welcome();
 
+    //TODO What if cwd exceeds size
     char cwd[1024];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -157,6 +156,13 @@ int main(int argc, char **argv) {
     } else {
         perror("getcwd() error");
         exit(-1);
+    }
+
+    char **env = load_profile(cwd);
+
+
+    for(int i = 0; i < sizeof(env) / sizeof(char*); i++) {
+        printf("%s", env[i]);
     }
 
     command_loop(cwd);

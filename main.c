@@ -3,8 +3,12 @@
 #include <string.h>
 #include <pwd.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #define LINE_BUFFER_SIZE 1024
+
+#define ARG_BUFFER_SIZE 64
+#define DELIM_SYMBOLS " \n\t\r\a"
 
 char *read_line() {
     int bufferSize = LINE_BUFFER_SIZE;
@@ -43,22 +47,99 @@ char *read_line() {
     }
 }
 
+
+char **parse_args(char *line) {
+    int bufferSize = ARG_BUFFER_SIZE;
+
+    char **args = malloc(sizeof(char*) * bufferSize);
+    char *arg;
+
+    if(!args) {
+        perror("Args reallocation error");
+        exit(-1);
+    }
+
+    arg = strtok(line, DELIM_SYMBOLS);
+
+    int i = 0;
+    while(arg != NULL) {
+        args[i] = arg;
+        i++;
+
+        if(i > bufferSize) {
+            bufferSize += ARG_BUFFER_SIZE;
+
+            args = realloc(args, sizeof(char*) * bufferSize);
+
+            if(!args){
+                perror("Args reallocation error");
+                exit(-1);
+            }
+        }
+
+        arg = strtok(NULL, DELIM_SYMBOLS);
+    }
+
+    args[i] = NULL;
+
+    return args;
+}
+
+/**
+ * Executes a command by spawning a new process
+ * @param  command Command to execute
+ * @return      Return status
+ */
+int execute_command(char **args) {
+    pid_t pid, waitingPid;
+    int status;
+
+    pid = fork();
+
+    if(pid < 0) {
+        perror("Error forking process");
+    } else if (pid == 0) {
+        //child process, execute the command
+
+        if(execvp(args[0], args) == -1) {
+            perror("Error executing command");
+        }
+
+
+    } else {
+        //Parent process
+        do {
+            waitingPid = waitpid(pid, &status, WUNTRACED);
+        } while(!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
+
+    return 1;
+}
+
 void command_loop(char cwd[]) {
     char *line;
+    char **args;
 
     while(1) {
         printf("%s > ", cwd);
 
         line = read_line();
 
-        if(strcmp("exit", line) == 0) {
+        args = parse_args(line);
+
+        if(strcmp("exit", args[0]) == 0) {
             break;
+        } else {
+            execute_command(args);
         }
+
+        free(line);
+        free(args);
     }
 }
 
 void print_welcome() {
-    struct passwd *p = getpwuid(getuid());  // Check for NULL!
+    struct passwd *p = getpwuid(getuid());
     printf("Welcome: %s!\n", p->pw_name);
 }
 

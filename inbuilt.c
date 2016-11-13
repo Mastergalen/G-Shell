@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "definition.h"
+#include "loadProfile.h"
 
 /**
  * Change the cwd of the shell
@@ -13,7 +14,6 @@
  */
 int cd(Shell *shell, char *path) {
     if(path == NULL) {
-        printf("Changing to HOME\n");
         path = shell->home;
     }
 
@@ -30,6 +30,8 @@ int cd(Shell *shell, char *path) {
     return 1;
 }
 
-void set_variable(Shell *shell, char *var, char *value) {
+int set_shell_variable(Shell *shell, char *input) {
+    set_variable(shell, input);
 
+    return 1;
 }

@@ -7,7 +7,7 @@
 #define PATH_BUFFER_SIZE 64
 #define PATH_DELIM ":"
 
-char **split_line(char *line) {
+char **split_assignment(char *line) {
     int size = 2;
 
     char **pieces = malloc(sizeof(char*) * size);
@@ -66,6 +66,23 @@ char **split_path(char *string) {
     return paths;
 }
 
+void set_variable(Shell *shell, char *line) {
+    char **pieces = split_assignment(line);
+
+    //Ignore dollar sign
+    if(pieces[0][0] == '$') pieces[0]++;
+
+    if(strcmp(pieces[0], "HOME") == 0) {
+        shell->home = strdup(pieces[1]);
+    } else if(strcmp(pieces[0], "PATH") == 0) {
+        shell->path = split_path(pieces[1]);
+    } else {
+        printf("Unable to set %s\n", pieces[0]);
+    }
+
+    free(pieces);
+}
+
 void load_profile(char *profileLocation, Shell *shell) {
     FILE *file;
     size_t read;
@@ -85,15 +102,7 @@ void load_profile(char *profileLocation, Shell *shell) {
     while((read = getline(&line, &len, file)) != -1) {
         line[strlen(line) - 1] = '\0'; //Remove \n char
 
-        char **pieces = split_line(line);
-
-        if(strcmp(pieces[0], "HOME") == 0) {
-            shell->home = strdup(pieces[1]);
-        } else if(strcmp(pieces[0], "PATH") == 0) {
-            shell->path = split_path(pieces[1]);
-        }
-
-        free(pieces);
+        set_variable(shell, line);
     }
 
     fclose(file);

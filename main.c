@@ -46,7 +46,6 @@ void print_welcome() {
 int main(int argc, char **argv) {
     print_welcome();
 
-    //TODO What if cwd exceeds size
     Shell shell;
 
     if (getcwd(shell.cwd, sizeof(shell.cwd)) == NULL) {

@@ -46,6 +46,8 @@ int execute_cmd(Shell *shell, char **args) {
 
     if(strcmp(args[0], "cd") == 0) {
         return cd(shell, args[1]);
+    } else if(args[0][0] == '$') {
+        return set_shell_variable(shell, args[0]);
     }
 
     pid_t pid, waitingPid;

@@ -68,6 +68,7 @@ int execute_cmd(Shell *shell, char **args) {
             perror("Error executing command");
         }
 
+        free(programPath);
     } else {
         //Parent process, wait for child process
         do {

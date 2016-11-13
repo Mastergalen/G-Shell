@@ -33,6 +33,8 @@ char **split_assignment(char *line) {
         piece = strtok(NULL, "=");
     }
 
+    free(piece);
+
     return pieces;
 }
 
@@ -74,6 +76,8 @@ char **split_path(char *string) {
 
         path = strtok(NULL, PATH_DELIM);
     }
+
+    free(path);
 
     paths[i] = NULL;
 

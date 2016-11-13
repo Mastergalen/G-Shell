@@ -85,6 +85,8 @@ char **parse_args(char *line) {
         arg = strtok(NULL, DELIM_SYMBOLS);
     }
 
+    free(arg);
+
     args[i] = NULL;
 
     return args;

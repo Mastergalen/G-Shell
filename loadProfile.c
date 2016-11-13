@@ -4,6 +4,9 @@
 
 #include "definition.h"
 
+#define PATH_BUFFER_SIZE 64
+#define PATH_DELIM ":"
+
 char **split_line(char *line) {
     int size = 2;
 
@@ -26,8 +29,41 @@ char **split_line(char *line) {
     return pieces;
 }
 
-char **split_path(char *paths) {
-    
+char **split_path(char *string) {
+    int bufferSize = PATH_BUFFER_SIZE;
+
+    char **paths = malloc(sizeof(char*) * bufferSize);
+    char *path;
+
+    if(!paths) {
+        perror("Memory allocation error");
+        exit(-1);
+    }
+
+    path = strtok(string, PATH_DELIM);
+
+    int i = 0;
+    while(path != NULL) {
+        paths[i] = path;
+        i++;
+
+        if(i > bufferSize) {
+            bufferSize += PATH_BUFFER_SIZE;
+
+            paths = realloc(paths, sizeof(char*) * bufferSize);
+
+            if(!paths){
+                perror("Memory reallocation error");
+                exit(-1);
+            }
+        }
+
+        path = strtok(NULL, PATH_DELIM);
+    }
+
+    paths[i] = NULL;
+
+    return paths;
 }
 
 void load_profile(char *profileLocation, Shell *shell) {
@@ -52,11 +88,9 @@ void load_profile(char *profileLocation, Shell *shell) {
         char **pieces = split_line(line);
 
         if(strcmp(pieces[0], "HOME") == 0) {
-            printf("Setting home to %s\n", pieces[1]);
             shell->home = strdup(pieces[1]);
         } else if(strcmp(pieces[0], "PATH") == 0) {
-            shell->path = strdup(pieces[1]);
-            printf("Set path to %s\n", shell->path);
+            shell->path = split_path(pieces[1]);
         }
 
         free(pieces);
@@ -65,4 +99,15 @@ void load_profile(char *profileLocation, Shell *shell) {
     fclose(file);
 
     free(line);
+
+    //TODO Check if error is thrown
+    if(shell->home == NULL) {
+        perror("Error: HOME not set in profile!");
+        exit(-1);
+    }
+
+    if(shell->path == NULL) {
+        perror("Error: PATH not set in profile!");
+        exit(-1);
+    }
 }

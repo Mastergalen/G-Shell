@@ -52,7 +52,7 @@ char **parse_args(char *line) {
     char *arg;
 
     if(!args) {
-        perror("Args reallocation error");
+        perror("Args malloc error");
         exit(-1);
     }
 

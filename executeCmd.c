@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 
 #include "definition.h"
+#include "inbuilt.h"
 
 /**
  * Returns the full path of a program if it exists in one of the
@@ -42,15 +43,13 @@ char *find_program(char **path, char *program) {
  * @return      Return status
  */
 int execute_cmd(Shell *shell, char **args) {
+
+    if(strcmp(args[0], "cd") == 0) {
+        return cd(shell, args[1]);
+    }
+
     pid_t pid, waitingPid;
     int status;
-
-    char *homePrefix = "HOME=";
-    char home[strlen(homePrefix) + strlen(shell->home) + 1];
-    strcpy(home, homePrefix);
-    strcat(home, shell->home);
-
-    //printf("Loaded home: %s\n", env_args[1]);
 
     pid = fork();
 

@@ -134,14 +134,13 @@ void load_profile(char *profileLocation, Shell *shell) {
 
     free(line);
 
-    //TODO Check if error is thrown
-    if(shell->home == NULL) {
-        perror("Error: HOME not set in profile!");
+    if(shell->home == NULL || strlen(shell->home) == 0) {
+        printf("Error: HOME not set in profile!\n");
         exit(-1);
     }
 
     if(shell->path == NULL) {
-        perror("Error: PATH not set in profile!");
+        printf("Error: PATH not set in profile!\n");
         exit(-1);
     }
 }

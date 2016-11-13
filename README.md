@@ -1,6 +1,6 @@
 # G-Shell
 
-C Shell implementation for UCL Operating Systems coursework.
+C Shell implementation for UCL 3rd year Operating Systems coursework.
 
 ## Features
 

@@ -4,14 +4,19 @@ CFLAGS  = -g -Wall
 
 TARGET = main
 
-OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+OBJDIR=bin
+
+OBJECTS = $(patsubst %.c, $(OBJDIR)/%.o, $(wildcard *.c))
 
 all: $(TARGET)
+
+createBinDir:
+	mkdir -p $(OBJDIR)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-%.o: %.c
+$(OBJDIR)/%.o: %.c | createBinDir
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 clean:

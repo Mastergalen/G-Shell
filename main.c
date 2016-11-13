@@ -4,16 +4,21 @@
 #include <unistd.h>
 #include <pwd.h>
 
+#include "definition.h"
 #include "executeCmd.h"
 #include "loadProfile.h"
 #include "inputHandler.h"
 
-void command_loop(char cwd[]) {
+/**
+ * G-Shell by Galen Han
+ */
+
+void command_loop(Shell *shell) {
     char *line;
     char **args;
 
     while(1) {
-        printf("%s > ", cwd);
+        printf("%s > ", shell->cwd);
 
         line = read_line();
 
@@ -21,8 +26,11 @@ void command_loop(char cwd[]) {
 
         if(strcmp("exit", args[0]) == 0) {
             break;
+        } else if(args[0] == NULL) {
+            //Empty command entered, continue
+            continue;
         } else {
-            execute_cmd(args);
+            execute_cmd(shell, args);
         }
 
         free(line);
@@ -39,23 +47,18 @@ int main(int argc, char **argv) {
     print_welcome();
 
     //TODO What if cwd exceeds size
-    char cwd[1024];
+    Shell shell;
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        printf("Current working dir: %s\n", cwd);
+    if (getcwd(shell.cwd, sizeof(shell.cwd)) != NULL) {
+        printf("Current working dir: %s\n", shell.cwd);
     } else {
         perror("getcwd() error");
         exit(-1);
     }
 
-    char **env = load_profile(cwd);
+    load_profile(shell.cwd, &shell);
 
-
-    for(int i = 0; i < sizeof(env) / sizeof(char*); i++) {
-        printf("%s", env[i]);
-    }
-
-    command_loop(cwd);
+    command_loop(&shell);
 
     printf("Thanks, come again\n");
 

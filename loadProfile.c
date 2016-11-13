@@ -2,49 +2,67 @@
 #include <stdlib.h>
 #include <strings.h>
 
-#define LINE_BUFFER_SIZE 1024
-#define ENV_BUFFER_SIZE 64
+#include "definition.h"
 
-char **load_profile(char *path) {
+char **split_line(char *line) {
+    int size = 2;
+
+    char **pieces = malloc(sizeof(char*) * size);
+    char *piece;
+
+    if(!pieces) {
+        perror("malloc error");
+        exit(-1);
+    }
+
+    piece = strtok(line, "=");
+
+    for(int i = 0; i < size; i++) {
+        pieces[i] = piece;
+
+        piece = strtok(NULL, "=");
+    }
+
+    return pieces;
+}
+
+char **split_path(char *paths) {
+    
+}
+
+void load_profile(char *profileLocation, Shell *shell) {
     FILE *file;
     size_t read;
     size_t len = 0;
-    char *line;
-
-    int bufferSize = ENV_BUFFER_SIZE;
-    char **envVars = malloc(sizeof(char*) * bufferSize);
+    char *line = NULL;
 
     //TODO What if path does not have enough memory
-    strcat(path, "/profile");
+    strcat(profileLocation, "/profile");
 
-    file = fopen(path, "r");
+    file = fopen(profileLocation, "r");
 
     if(file == NULL) {
         perror("Failed reading profile");
         exit(-1);
     }
 
-    int i = 0;
     while((read = getline(&line, &len, file)) != -1) {
-        printf("%s", line);
-        envVars[i] = line;
-        i++;
+        line[strlen(line) - 1] = '\0'; //Remove \n char
 
-        if(i > bufferSize) {
-            bufferSize += ENV_BUFFER_SIZE;
+        char **pieces = split_line(line);
 
-            envVars = realloc(envVars, sizeof(char*) * bufferSize);
-
-            if(!envVars){
-                perror("EnvVars reallocation error");
-                exit(-1);
-            }
+        if(strcmp(pieces[0], "HOME") == 0) {
+            printf("Setting home to %s\n", pieces[1]);
+            shell->home = strdup(pieces[1]);
+        } else if(strcmp(pieces[0], "PATH") == 0) {
+            shell->path = strdup(pieces[1]);
+            printf("Set path to %s\n", shell->path);
         }
+
+        free(pieces);
     }
 
     fclose(file);
 
     free(line);
-
-    return envVars;
 }

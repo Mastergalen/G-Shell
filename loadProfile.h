@@ -1,2 +1,2 @@
 
-char **load_profile();
+void load_profile(char *profileLocation, Shell *shell);

@@ -7,6 +7,12 @@
 #define PATH_BUFFER_SIZE 64
 #define PATH_DELIM ":"
 
+/**
+ * Splits the string for variable assignment into two
+ * pieces at the '=' character
+ * @param  line string input
+ * @return      Array of strings
+ */
 char **split_assignment(char *line) {
     int size = 2;
 
@@ -29,6 +35,13 @@ char **split_assignment(char *line) {
     return pieces;
 }
 
+/**
+ * Splits a path string into pieces
+ * E.g. "$PATH=/bin:/usr/bin"
+ * Becomes ["/bin", "/usr/bin"]
+ * @param  string Path string
+ * @return        Array of strings, paths to folders
+ */
 char **split_path(char *string) {
     int bufferSize = PATH_BUFFER_SIZE;
 
@@ -66,6 +79,12 @@ char **split_path(char *string) {
     return paths;
 }
 
+/**
+ * Sets the shell state environment variables
+ * E.g. "$HOME=/home/os" sets shell->home to "/home/os"
+ * @param shell Shell state
+ * @param line  Line string
+ */
 void set_variable(Shell *shell, char *line) {
     char **pieces = split_assignment(line);
 
@@ -83,6 +102,11 @@ void set_variable(Shell *shell, char *line) {
     free(pieces);
 }
 
+/**
+ * Loads the profile and updates the shell state
+ * @param profileLocation Path to profile folder
+ * @param shell           Shell state
+ */
 void load_profile(char *profileLocation, Shell *shell) {
     FILE *file;
     size_t read;

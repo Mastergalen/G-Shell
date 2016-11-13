@@ -8,7 +8,7 @@
 
 /**
  * Change the cwd of the shell
- * @param  shell [description]
+ * @param  shell Shell state
  * @param  path  Path to change to
  * @return       Success status
  */
@@ -30,6 +30,13 @@ int cd(Shell *shell, char *path) {
     return 1;
 }
 
+/**
+ * Handles the builtin command for environment variable
+ * assignments
+ * @param  shell Shell state
+ * @param  input Full variable assignment string. E.g. $HOME=/home
+ * @return       Success status
+ */
 int set_shell_variable(Shell *shell, char *input) {
     set_variable(shell, input);
 

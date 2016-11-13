@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 
 #include "definition.h"
-#include "inbuilt.h"
+#include "builtin.h"
 
 /**
  * Returns the full path of a program if it exists in one of the

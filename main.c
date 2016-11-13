@@ -9,10 +9,14 @@
 #include "loadProfile.h"
 #include "inputHandler.h"
 
-/**
- * G-Shell by Galen Han
- */
+/* * * * * * * * * * * * *
+ * G-Shell by Galen Han  *
+ * * * * * * * * * * * * */
 
+/**
+ * Main loop of the shell
+ * @param shell Shell state
+ */
 void command_loop(Shell *shell) {
     char *line;
     char **args;
@@ -38,6 +42,9 @@ void command_loop(Shell *shell) {
     }
 }
 
+/**
+ * Prints a welcome message with the current user
+ */
 void print_welcome() {
     struct passwd *p = getpwuid(getuid());
     printf("Welcome: %s!\n", p->pw_name);

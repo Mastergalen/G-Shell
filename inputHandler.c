@@ -7,6 +7,10 @@
 #define ARG_BUFFER_SIZE 64
 #define DELIM_SYMBOLS " \n\t\r\a"
 
+/**
+ * Reads a line from the shell input
+ * @return String of input
+ */
 char *read_line() {
     int bufferSize = LINE_BUFFER_SIZE;
     int pos = 0;
@@ -44,7 +48,11 @@ char *read_line() {
     }
 }
 
-
+/**
+ * Splits a command into an array of args
+ * @param  line Input command
+ * @return      Array of strings
+ */
 char **parse_args(char *line) {
     int bufferSize = ARG_BUFFER_SIZE;
 

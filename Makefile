@@ -4,22 +4,15 @@ CFLAGS  = -g -Wall
 
 TARGET = main
 
+OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o loadProfile.o inputHandler.o executeCmd.o
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).o loadProfile.o inputHandler.o executeCmd.o
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
 
-$(TARGET).o: main.c definition.h loadProfile.h inputHandler.h executeCmd.h
-	$(CC) $(CFLAGS) -c main.c
-
-executeCmd.o: definition.h executeCmd.c executeCmd.h
-	$(CC) $(CFLAGS) -c executeCmd.c
-
-loadProfile.o: definition.h loadProfile.c loadProfile.h
-	$(CC) $(CFLAGS) -c loadProfile.c
-
-inputHandler.o: inputHandler.c inputHandler.h
-	$(CC) $(CFLAGS) -c inputHandler.c
+%.o: %.c
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 clean:
-	$(RM) $(TARGET)
+	$(RM) $(TARGET) $(OBJECTS)

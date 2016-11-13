@@ -49,9 +49,7 @@ int main(int argc, char **argv) {
     //TODO What if cwd exceeds size
     Shell shell;
 
-    if (getcwd(shell.cwd, sizeof(shell.cwd)) != NULL) {
-        printf("Current working dir: %s\n", shell.cwd);
-    } else {
+    if (getcwd(shell.cwd, sizeof(shell.cwd)) == NULL) {
         perror("getcwd() error");
         exit(-1);
     }

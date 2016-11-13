@@ -72,10 +72,10 @@ void load_profile(char *profileLocation, Shell *shell) {
     size_t len = 0;
     char *line = NULL;
 
-    //TODO What if path does not have enough memory
-    strcat(profileLocation, "/profile");
+    char *profilePath = strdup(profileLocation);
+    strcat(profilePath, "/profile");
 
-    file = fopen(profileLocation, "r");
+    file = fopen(profilePath, "r");
 
     if(file == NULL) {
         perror("Failed reading profile");

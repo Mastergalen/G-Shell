@@ -25,17 +25,18 @@ void command_loop(Shell *shell) {
         printf("%s > ", shell->cwd);
 
         line = read_line();
-
         args = parse_args(line);
 
-        if(strcmp("exit", args[0]) == 0) {
-            break;
-        } else if(args[0] == NULL) {
-            //Empty command entered, continue
-            continue;
-        } else {
+        if(args[0] != NULL) {
+            if(strcmp("exit", args[0]) == 0) break;
+
             execute_cmd(shell, args);
         }
+
+
+
+        //Command finished, or empty command entered
+
 
         free(line);
         free(args);

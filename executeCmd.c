@@ -74,6 +74,7 @@ int execute_cmd(Shell *shell, char **args) {
         do {
             waitingPid = waitpid(pid, &status, WUNTRACED);
         } while(!WIFEXITED(status) && !WIFSIGNALED(status));
+        //WIFEXITED = "wife exited" lol
     }
 
     return 1;

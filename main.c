@@ -33,10 +33,7 @@ void command_loop(Shell *shell) {
             execute_cmd(shell, args);
         }
 
-
-
         //Command finished, or empty command entered
-
 
         free(line);
         free(args);

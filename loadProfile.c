@@ -28,7 +28,7 @@ char **split_assignment(char *line) {
 
     int i;
     for(i = 0; i < size; i++) {
-        pieces[i] = piece;
+        pieces[i] = strdup(piece);
 
         piece = strtok(NULL, "=");
     }
@@ -60,7 +60,7 @@ char **split_path(char *string) {
 
     int i = 0;
     while(path != NULL) {
-        paths[i] = path;
+        paths[i] = strdup(path);
         i++;
 
         if(i > bufferSize) {

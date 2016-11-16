@@ -105,3 +105,11 @@ If no `$HOME` or `$PATH` is set, an error is thrown and the shell exits.
 ## set_variable()
 
 Sets the shell state for the `$PATH` and `$HOME` variable assignments.
+
+## utils.c
+
+Collection of utility functions.
+
+### concat()
+
+Concatenates two strings.

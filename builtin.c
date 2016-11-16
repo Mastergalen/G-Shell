@@ -18,6 +18,7 @@ int cd(Shell *shell, char *path) {
     }
 
     if(chdir(path) == -1) {
+        printf("Tried changing to %s\n", path);
         perror("Error changing dir");
         return -1;
     };

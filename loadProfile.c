@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "definition.h"
+#include "utils.h"
 
 #define PATH_BUFFER_SIZE 64
 #define PATH_DELIM ":"
@@ -112,14 +113,13 @@ void set_variable(Shell *shell, char *line) {
  * @param profileLocation Path to profile folder
  * @param shell           Shell state
  */
-void load_profile(char *profileLocation, Shell *shell) {
+void load_profile(const char *profileLocation, Shell *shell) {
     FILE *file;
     size_t read;
     size_t len = 0;
     char *line = NULL;
 
-    char *profilePath = strdup(profileLocation);
-    strcat(profilePath, "/profile"); //TODO Fix memory leak
+    char *profilePath = str_concat(profileLocation, "/profile");
 
     file = fopen(profilePath, "r");
 

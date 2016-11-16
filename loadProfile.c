@@ -29,7 +29,11 @@ char **split_assignment(char *line) {
 
     int i;
     for(i = 0; i < size; i++) {
-        pieces[i] = strdup(piece);
+        if(piece == NULL) { //Nothing after =, e.g. "$PATH="
+            pieces[i] = NULL;
+        } else {
+            pieces[i] = strdup(piece);
+        }
 
         piece = strtok(NULL, "=");
     }
@@ -93,6 +97,12 @@ char **split_path(char *string) {
  */
 void set_variable(Shell *shell, char *line) {
     char **pieces = split_assignment(line);
+
+    if(pieces[1] == NULL) {
+        printf("Error: Invalid assignment value\n");
+        free(pieces);
+        return;
+    }
 
     //Ignore dollar sign
     if(pieces[0][0] == '$') pieces[0]++;

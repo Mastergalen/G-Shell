@@ -50,7 +50,7 @@ int execute_cmd(Shell *shell, char **args) {
         return set_shell_variable(shell, args[0]);
     }
 
-    pid_t pid, waitingPid;
+    pid_t pid;
     int status;
 
     pid = fork();
@@ -72,7 +72,7 @@ int execute_cmd(Shell *shell, char **args) {
     } else {
         //Parent process, wait for child process
         do {
-            waitingPid = waitpid(pid, &status, WUNTRACED);
+            waitpid(pid, &status, WUNTRACED);
         } while(!WIFEXITED(status) && !WIFSIGNALED(status));
         //WIFEXITED = "wife exited" lol
     }

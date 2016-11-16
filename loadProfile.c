@@ -119,7 +119,7 @@ void load_profile(char *profileLocation, Shell *shell) {
     char *line = NULL;
 
     char *profilePath = strdup(profileLocation);
-    strcat(profilePath, "/profile");
+    strcat(profilePath, "/profile"); //TODO Fix memory leak
 
     file = fopen(profilePath, "r");
 

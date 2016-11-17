@@ -21,3 +21,18 @@ char *str_concat(const char *s1, const char *s2) {
 
     return result;
 }
+
+/**
+ * Frees memory for array of strings
+ * @param array Pointer to string array
+ */
+void free_str_array(char **array) {
+    int i = 0;
+
+    while(array[i] != NULL) {
+        free(array[i]);
+        i++;
+    }
+
+    free(array);
+}

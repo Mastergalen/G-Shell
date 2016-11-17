@@ -53,7 +53,7 @@ char *read_line() {
  * @param  line Input command
  * @return      Array of strings
  */
-char **parse_args(char *line) {
+char **parse_args(const char *line) {
     int bufferSize = ARG_BUFFER_SIZE;
 
     char **args = malloc(sizeof(char*) * bufferSize);
@@ -64,11 +64,12 @@ char **parse_args(char *line) {
         exit(-1);
     }
 
-    arg = strtok(line, DELIM_SYMBOLS);
+    char *lineCopy = strdup(line);
+    arg = strtok(lineCopy, DELIM_SYMBOLS);
 
     int i = 0;
     while(arg != NULL) {
-        args[i] = arg;
+        args[i] = strdup(arg);
         i++;
 
         if(i > bufferSize) {
@@ -85,6 +86,7 @@ char **parse_args(char *line) {
         arg = strtok(NULL, DELIM_SYMBOLS);
     }
 
+    free(lineCopy);
     free(arg);
 
     args[i] = NULL;

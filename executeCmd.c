@@ -42,7 +42,7 @@ char *find_program(char **path, char *program) {
  * @param  command Command to execute
  * @return      Return status
  */
-int execute_cmd(Shell *shell, char **args) {
+int execute_cmd(Shell *shell, const char **args) {
 
     if(strcmp(args[0], "cd") == 0) {
         return cd(shell, args[1]);

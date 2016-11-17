@@ -8,6 +8,7 @@
 #include "executeCmd.h"
 #include "loadProfile.h"
 #include "inputHandler.h"
+#include "utils.h"
 
 /* * * * * * * * * * * * *
  * G-Shell by Galen Han  *
@@ -36,8 +37,11 @@ void command_loop(Shell *shell) {
         //Command finished, or empty command entered
 
         free(line);
-        free(args);
+        free_str_array(args);
     }
+
+    free(line);
+    free_str_array(args);
 }
 
 /**
@@ -61,6 +65,9 @@ int main(int argc, char **argv) {
     load_profile(shell.cwd, &shell);
 
     command_loop(&shell);
+
+    free_str_array(shell.path);
+    free(shell.home);
 
     printf("Thanks, come again\n");
 

@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +16,8 @@
  * @param  line string input
  * @return      Array of strings
  */
-char **split_assignment(char *line) {
-    int size = 2;
+char **split_assignment(const char *line) {
+    int size = 3;
 
     char **pieces = malloc(sizeof(char*) * size);
     char *piece;
@@ -25,19 +27,20 @@ char **split_assignment(char *line) {
         exit(-1);
     }
 
-    piece = strtok(line, "=");
+    char *lineCopy = strdup(line);
+    piece = strtok(lineCopy, "=");
 
-    int i;
-    for(i = 0; i < size; i++) {
-        if(piece == NULL) { //Nothing after =, e.g. "$PATH="
-            pieces[i] = NULL;
-        } else {
-            pieces[i] = strdup(piece);
-        }
+    int i = 0;
+    while(piece != NULL && i < 2) {
+        pieces[i] = strdup(piece);
 
         piece = strtok(NULL, "=");
+        i++;
     }
 
+    pieces[i] = NULL;
+
+    free(lineCopy);
     free(piece);
 
     return pieces;
@@ -50,7 +53,7 @@ char **split_assignment(char *line) {
  * @param  string Path string
  * @return        Array of strings, paths to folders
  */
-char **split_path(char *string) {
+char **split_path(const char *string) {
     int bufferSize = PATH_BUFFER_SIZE;
 
     char **paths = malloc(sizeof(char*) * bufferSize);
@@ -61,7 +64,9 @@ char **split_path(char *string) {
         exit(-1);
     }
 
-    path = strtok(string, PATH_DELIM);
+    char *stringCopy = strdup(string);
+
+    path = strtok(stringCopy, PATH_DELIM);
 
     int i = 0;
     while(path != NULL) {
@@ -82,6 +87,7 @@ char **split_path(char *string) {
         path = strtok(NULL, PATH_DELIM);
     }
 
+    free(stringCopy);
     free(path);
 
     paths[i] = NULL;
@@ -100,22 +106,23 @@ void set_variable(Shell *shell, char *line) {
 
     if(pieces[1] == NULL) {
         printf("Error: Invalid assignment value\n");
-        free(pieces);
+        free_str_array(pieces);
         return;
     }
 
-    //Ignore dollar sign
-    if(pieces[0][0] == '$') pieces[0]++;
+    //Ignore dollar sign for variavle
+    char *var = pieces[0];
+    if(var[0] == '$') var++;
 
-    if(strcmp(pieces[0], "HOME") == 0) {
+    if(strcmp(var, "HOME") == 0) {
         shell->home = strdup(pieces[1]);
-    } else if(strcmp(pieces[0], "PATH") == 0) {
+    } else if(strcmp(var, "PATH") == 0) {
         shell->path = split_path(pieces[1]);
     } else {
-        printf("Unable to set %s\n", pieces[0]);
+        printf("Unable to set %s\n", var);
     }
 
-    free(pieces);
+    free_str_array(pieces);
 }
 
 /**
@@ -132,6 +139,8 @@ void load_profile(const char *profileLocation, Shell *shell) {
     char *profilePath = str_concat(profileLocation, "/profile");
 
     file = fopen(profilePath, "r");
+
+    free(profilePath);
 
     if(file == NULL) {
         perror("Failed reading profile");

@@ -12,7 +12,7 @@
  * @param  path  Path to change to
  * @return       Success status
  */
-int cd(Shell *shell, char *path) {
+int cd(Shell *shell, const char *path) {
     if(path == NULL) {
         path = shell->home;
     }
@@ -38,7 +38,7 @@ int cd(Shell *shell, char *path) {
  * @param  input Full variable assignment string. E.g. $HOME=/home
  * @return       Success status
  */
-int set_shell_variable(Shell *shell, char *input) {
+int set_shell_variable(Shell *shell, const char *input) {
     set_variable(shell, input);
 
     return 1;

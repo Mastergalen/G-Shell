@@ -1,4 +1,4 @@
 
-int cd(Shell *shell, char *path);
+int cd(Shell *shell, const char *path);
 
-int set_shell_variable(Shell *shell, char *input);
+int set_shell_variable(Shell *shell, const char *input);

@@ -36,3 +36,25 @@ void free_str_array(char **array) {
 
     free(array);
 }
+
+char **str_array_dup(const char **src) {
+
+    int length = 0; //Start with 1 to account for null
+    while(src[length] != NULL) {
+        length++;
+    }
+    length++; //One more for NULL at the end
+
+    char **dup = malloc(sizeof(char*) * length);
+
+    int i = 0;
+    while(src[i] != NULL) {
+        int width = strlen(src[i]) + 1;
+        dup[i] = malloc(width);
+        memcpy(dup[i], src[i], width);
+        i++;
+    }
+    dup[i] = NULL;
+
+    return dup;
+}

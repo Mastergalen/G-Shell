@@ -7,6 +7,7 @@
 
 #include "definition.h"
 #include "builtin.h"
+#include "utils.h"
 
 /**
  * Returns the full path of a program if it exists in one of the
@@ -15,7 +16,7 @@
  * @param  program Name of the program to search for
  * @return         Full path to the program, otherwise NULL
  */
-char *find_program(char **path, char *program) {
+char *find_program(char **path, const char *program) {
     struct stat buffer;
     int i = 0;
 
@@ -53,6 +54,8 @@ int execute_cmd(Shell *shell, const char **args) {
     pid_t pid;
     int status;
 
+    char **argsCopy = str_array_dup(args);
+
     pid = fork();
 
     if(pid < 0) {
@@ -60,11 +63,11 @@ int execute_cmd(Shell *shell, const char **args) {
     } else if (pid == 0) {
         //child process, execute the command
 
-        char *programPath = find_program(shell->path, args[0]);
+        char *programPath = find_program(shell->path, argsCopy[0]);
 
         if(programPath == NULL) {
             perror("Could not find the command");
-        } else if(execv(programPath, args) == -1) {
+        } else if(execv(programPath, argsCopy) == -1) {
             perror("Error executing command");
         }
 
@@ -76,6 +79,8 @@ int execute_cmd(Shell *shell, const char **args) {
         } while(!WIFEXITED(status) && !WIFSIGNALED(status));
         //WIFEXITED = "wife exited" lol
     }
+
+    free_str_array(argsCopy);
 
     return 1;
 }

@@ -1,2 +1,2 @@
 
-int execute_cmd(Shell *shell, char **args);
+int execute_cmd(Shell *shell, const char **args);

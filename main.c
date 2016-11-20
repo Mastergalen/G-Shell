@@ -31,7 +31,7 @@ void command_loop(Shell *shell) {
         if(args[0] != NULL) {
             if(strcmp("exit", args[0]) == 0) break;
 
-            execute_cmd(shell, args);
+            execute_cmd(shell, (const char**) args);
         }
 
         //Command finished, or empty command entered
@@ -56,6 +56,8 @@ int main(int argc, char **argv) {
     print_welcome();
 
     Shell shell;
+    shell.path = NULL;
+    shell.home = NULL;
 
     if (getcwd(shell.cwd, sizeof(shell.cwd)) == NULL) {
         perror("getcwd() error");

@@ -115,6 +115,9 @@ void set_variable(Shell *shell, char *line) {
     if(var[0] == '$') var++;
 
     if(strcmp(var, "HOME") == 0) {
+        if(shell->home != NULL) {
+            free(shell->home);
+        }
         shell->home = strdup(pieces[1]);
     } else if(strcmp(var, "PATH") == 0) {
         if(shell->path != NULL) {

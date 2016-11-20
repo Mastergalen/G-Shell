@@ -34,6 +34,8 @@ char *find_program(char **path, const char *program) {
         i++;
     }
 
+    free(fullPath);
+
     //Did not find file, return NULL
     return NULL;
 }

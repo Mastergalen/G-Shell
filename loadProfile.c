@@ -117,6 +117,9 @@ void set_variable(Shell *shell, char *line) {
     if(strcmp(var, "HOME") == 0) {
         shell->home = strdup(pieces[1]);
     } else if(strcmp(var, "PATH") == 0) {
+        if(shell->path != NULL) {
+            free_str_array(shell->path);
+        }
         shell->path = split_path(pieces[1]);
     } else {
         printf("Unable to set %s\n", var);

@@ -8,6 +8,14 @@ C Shell implementation for UCL 3rd year Operating Systems coursework.
 * `$HOME` and `$PATH` variable assignment
 * Execute any commands located in `$PATH`
 
+## Run
+
+```
+make
+
+./shell
+```
+
 ## Implementation
 
 Read [docs.pdf](docs.pdf)
